@@ -456,7 +456,7 @@ class FlxTween implements IFlxDestroyable
 		{
 			scale = 1 - scale;
 		}
-		if (_secondsSinceStart > delay && _running == false)
+		if (_secondsSinceStart > delay && !_running)
 		{
 			_running = true;
 			if (onStart != null) 
@@ -510,7 +510,7 @@ class FlxTween implements IFlxDestroyable
 		if (onComplete != null) 
 			onComplete(this);
 		
-		var type = type & ~ FlxTween.BACKWARD;
+		var type = type & ~FlxTween.BACKWARD;
 		
 		if (type == FlxTween.PERSIST || type == FlxTween.ONESHOT)
 		{
@@ -672,7 +672,8 @@ class FlxTween implements IFlxDestroyable
 
 typedef TweenCallback = FlxTween->Void;
 
-typedef TweenOptions = {
+typedef TweenOptions =
+{
 	?type:Null<Int>,
 	?ease:EaseFunction,
 	?onStart:TweenCallback,
@@ -682,6 +683,9 @@ typedef TweenOptions = {
 	?loopDelay:Null<Float>
 }
 
+/**
+ * A simple manager for tracking and updating game tween objects.  Normally accessed via the static `FlxTween.manager` rather than being created separately.
+ */
 @:access(flixel.tweens.FlxTween)
 class FlxTweenManager extends FlxBasic
 {
@@ -794,5 +798,14 @@ class FlxTweenManager extends FlxBasic
 		{
 			remove(_tweens[0]);
 		}
+	}
+	/**
+	 * Immediately updates all tweens of type PERSIST or ONESHOT to their endings.
+	 */
+	public function completeAll():Void
+	{
+		for (tween in _tweens)
+			if (tween.type == FlxTween.PERSIST || tween.type == FlxTween.ONESHOT)
+				tween.update(tween.duration);
 	}
 }
