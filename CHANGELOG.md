@@ -3,7 +3,6 @@
 * `FlxG.vcr`: added an `OpenSaveDialog` argument to `stopRecording()` (#1726)
 * `FlxText`: [Flash] fixed blurry lines on multiline texts with `FlxTextAlign.CENTER` (#1728)
 * `flixel.input.gamepad`: added IDs for analog stick directions to `FlxGamepadInputID` (#1746)
-*  `FlxGame` / `FlxCamera`: `setFilters()` now needs to be called again on each filter array change (#1761)
 * `FlxSound`: added `loopTime`, added a `StartTime` argument to `play()` (#1736)
 * `FlxMouse:` added `enabled`
 
@@ -18,6 +17,11 @@
 	* fixed cursor disappearing after losing Console focus with native cursor API
 	* fixed mouse focus area of windows being too big
 * `FlxAnimationController`: fixed `finishCallback` firing multiple times in one frame (#1781)
+* `FlxPreloader`: [HTML5] fixed preloader not showing up (#1750)
+* `FlxStringUtil#formatMoney()`:
+	* fixed formatting for `Amount < 0` (#1754)
+	* fixed formatting for negative amounts
+	* [HTML5] fixed formatting for amounts > Int32 
 
 4.0.0
 ------------------------------
