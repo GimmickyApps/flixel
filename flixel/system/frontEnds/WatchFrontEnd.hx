@@ -4,6 +4,8 @@ import flixel.FlxG;
 
 class WatchFrontEnd
 {
+	public function new() {}
+
 	/**
 	 * Add a variable to the watch list in the debugger.
 	 * This lets you see the value of the variable all the time.
@@ -15,7 +17,8 @@ class WatchFrontEnd
 	public inline function add(AnyObject:Dynamic, VariableName:String, ?DisplayName:String):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.watch.add(AnyObject, VariableName, DisplayName);
+		if (AnyObject != null)
+			FlxG.game.debugger.watch.add(AnyObject, VariableName, DisplayName);
 		#end
 	}
 	
@@ -29,7 +32,8 @@ class WatchFrontEnd
 	public inline function remove(AnyObject:Dynamic, ?VariableName:String):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.watch.remove(AnyObject, VariableName);
+		if (AnyObject != null)
+			FlxG.game.debugger.watch.remove(AnyObject, VariableName);
 		#end
 	}
 	
@@ -61,6 +65,35 @@ class WatchFrontEnd
 	}
 	
 	/**
+	 * Add an expression to the watch list in the debugger.
+	 * The expression gets evaluated with hscript, and you can see its current value all the time.
+	 * 
+	 * @param	Expression		A Haxe expression written as a string that will be evaluated and watched.
+	 * @param	DisplayName		Optional, display your own string instead of the expression string: e.g. "enemy count".
+	 */
+	public function addExpr(Expression:String, ?DisplayName:String):Void
+	{
+		#if (FLX_DEBUG && hscript)
+		if (Expression != null && Expression.length > 0)
+			FlxG.game.debugger.watch.add(null, Expression, DisplayName);
+		#end
+	}
+	
+	/**
+	 * Remove an expression from the watch list in the debugger.
+	 * You can pass the display name or the entire expression itself to remove it.
+	 * 
+	 * @param	Expression		The Haxe expression that you want to remove. Pass null if you wish to remove it by its display name instead.
+	 * @param	DisplayName		The name of the expression you want to remove. Pass null (or don't pass anything) if the previous parameter is not null.
+	 */
+	public function removeExpr(?Expression:String, ?DisplayName:String):Void
+	{
+		#if (FLX_DEBUG && hscript)
+		FlxG.game.debugger.watch.removeExpr(Expression, DisplayName);
+		#end
+	}
+	
+	/**
 	 * Add the mouse coords to the watch window. Useful for quickly 
 	 * getting coordinates for object placement during prototyping!
 	 */
@@ -80,10 +113,4 @@ class WatchFrontEnd
 		remove(FlxG, "mouse");
 		#end
 	}
-	
-	/**
-	 * Just needed to create an instance.
-	 */
-	@:allow(flixel.FlxG)
-	public function new() {}
 }
